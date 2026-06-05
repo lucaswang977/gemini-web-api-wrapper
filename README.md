@@ -41,7 +41,24 @@ To authenticate the underlying browser session, grab the following cookies from 
 
 ## Installation & Running
 
-### 1. Using Docker (Recommended)
+### 1. Local Python Setup (Highly Convenient)
+
+If you directly launch this service on the same machine where you actively use your web browser to visit Gemini, the script can automatically discover and inherit your active session credentials. It uses `browser_cookie3` to fetch cookies securely directly from your browser's profile databases.
+
+* **Install dependencies:**
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+* **Launch the server:**
+  ```bash
+  python main.py
+  ```
+  The API will bind to `http://localhost:6969`. If local cookies cannot be extracted or are missing, it will automatically fall back to checking the environment variables as shown below.
+
+### 2. Using Docker
+
+When running inside an isolated Docker container, the service cannot access your host machine's native browser profiles. Therefore, you **must manually extract** the browser session cookies and pass them explicitly via environment variables.
 
 * **Build the image:**
   ```bash
@@ -57,21 +74,6 @@ To authenticate the underlying browser session, grab the following cookies from 
     --name gemini-wrapper \
     gemini-openai-wrapper
   ```
-
-### 2. Local Python Setup
-
-* **Install dependencies & set environment variables:**
-  ```bash
-  pip install -r requirements.txt
-  export SECURE_1PSID="your_secure_1psid_value"
-  export SECURE_1PSIDTS="your_secure_1psidts_value"
-  ```
-
-* **Launch the server:**
-  ```bash
-  python main.py
-  ```
-  The API will bind to `http://localhost:6969`.
 
 ---
 
