@@ -117,8 +117,8 @@ async def list_models():
     return {
         "object": "list",
         "data": [
-            {"id": "gemini-3-flash-thinking", "object": "model", "owned_by": "google"},
-            {"id": "gemini-3-pro", "object": "model", "owned_by": "google"}
+            {"id": "openai/gpt-5", "object": "model", "owned_by": "openai"},
+            {"id": "openai/gpt-5-mini", "object": "model", "owned_by": "openai"}
         ]
     }
 
@@ -183,7 +183,17 @@ async def chat_completions(body: ChatCompletionRequest):
     prompt_text = prompt_text.strip()
     logger.info(f"Completed traversing all messages. Detected images: {len(uploaded_files)}")
     logger.debug(f"Parsed prompt text: {prompt_text[:100]}...")
-    target_model = body.model
+    
+    # Map custom model aliases to actual Gemini web API models
+    model_mapping = {
+        "openai/gpt-5-mini": "gemini-3-flash-thinking",
+        "gpt-5-mini": "gemini-3-flash-thinking",
+        "openai/gpt-5": "gemini-3-pro",
+        "gpt-5": "gemini-3-pro"
+    }
+    requested_model = body.model
+    target_model = model_mapping.get(requested_model, requested_model)
+    logger.info(f"Requested model: {requested_model} -> Resolved target model: {target_model}")
 
     # Streaming response handling
     if body.stream:
