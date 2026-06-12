@@ -2,5 +2,5 @@ fastapi
 uvicorn
 loguru
 pydantic
-gemini-webapi
+gemini-webapi >= 2.0.0
 browser_cookie3
